@@ -34,6 +34,12 @@ public class Speciality {
     public Speciality() {
     }
 
+    public Speciality(Long id, String name, Status status) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+    }
+
     public Long getId() {
         return id;
     }

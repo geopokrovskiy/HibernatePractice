@@ -16,7 +16,7 @@ public class Developer{
         @Column
         private String lastName;
 
-        @ManyToMany
+        @ManyToMany(fetch = FetchType.LAZY)
         @JoinTable(
                 name = "devs_skills",
                 joinColumns = @JoinColumn(name = "dev_id"),
@@ -45,6 +45,15 @@ public class Developer{
                 this.skills = skills;
                 this.speciality = speciality;
                 this.status = Status.ACTIVE;
+        }
+
+        public Developer(Long id, String firstName, String lastName, List<Skill> skills, Speciality speciality, Status status) {
+                this.id = id;
+                this.firstName = firstName;
+                this.lastName = lastName;
+                this.skills = skills;
+                this.speciality = speciality;
+                this.status = status;
         }
 
         public Developer() {

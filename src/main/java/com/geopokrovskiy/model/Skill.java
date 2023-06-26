@@ -28,6 +28,12 @@ public class Skill {
         this.status = Status.ACTIVE;
     }
 
+    public Skill(Long id, String name, Status status) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+    }
+
     public Skill() {
     }
 

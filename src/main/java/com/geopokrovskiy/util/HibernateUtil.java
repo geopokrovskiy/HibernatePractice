@@ -1,11 +1,11 @@
-package com.geopokrovskiy.DAO;
+package com.geopokrovskiy.util;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-public class HibernateUtil {
+public class HibernateUtil{
     private static SessionFactory sessionFactory = null;
 
     static {
@@ -35,4 +35,5 @@ public class HibernateUtil {
             session.close();
         }
     }
+
 }

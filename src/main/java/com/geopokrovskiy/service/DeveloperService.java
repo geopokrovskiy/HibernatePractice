@@ -1,36 +1,47 @@
 package com.geopokrovskiy.service;
 
-import com.geopokrovskiy.DAO.DAO;
 import com.geopokrovskiy.model.Developer;
 import com.geopokrovskiy.model.Skill;
 import com.geopokrovskiy.model.Speciality;
+import com.geopokrovskiy.model.Status;
+import com.geopokrovskiy.repository.DeveloperRepository;
+import com.geopokrovskiy.repository.hibernate.DeveloperRepositoryImpl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DeveloperService {
 
+    private DeveloperRepository developerRepository;
+
+    public DeveloperService() {
+        this.developerRepository = new DeveloperRepositoryImpl();
+    }
+
+    public DeveloperService(DeveloperRepository developerRepository) {
+        this.developerRepository = developerRepository;
+    }
+
     public Developer addNewDev(Developer developer) {
-        DAO.addObject(developer);
-        return developer;
+        return this.developerRepository.addNew(developer);
     }
 
     public Developer getDevById(Long id) {
-        Developer developer = (Developer) DAO.getObjectById(id, Developer.class);
-        DAO.closeOpenedSession();
-        return developer;
+        return this.developerRepository.getById(id);
     }
 
     public List<Developer> getAllDevs() {
-        List<Developer> devs = (List<Developer>) DAO.getAllObjects(Developer.class);
-        return devs;
+        return this.developerRepository.getAll().
+                stream().
+                filter(d -> d.getStatus().equals(Status.ACTIVE) && d.getSpeciality().getStatus().equals(Status.ACTIVE)).
+                collect(Collectors.toList());
     }
 
     public Developer updateDevFirstName(Long id, String firstName) {
         Developer developer = getDevById(id);
         if (developer != null) {
             developer.setFirstName(firstName);
-            DAO.updateObject(developer);
-            return developer;
+            return this.developerRepository.update(developer);
         }
         return null;
     }
@@ -39,8 +50,7 @@ public class DeveloperService {
         Developer developer = getDevById(id);
         if (developer != null) {
             developer.setLastName(lastName);
-            DAO.updateObject(developer);
-            return developer;
+            return this.developerRepository.update(developer);
         }
         return null;
     }
@@ -49,8 +59,7 @@ public class DeveloperService {
         Developer developer = getDevById(id);
         if (developer != null) {
             developer.setSpeciality(speciality);
-            DAO.updateObject(developer);
-            return developer;
+            return this.developerRepository.update(developer);
         }
         return null;
     }
@@ -59,18 +68,12 @@ public class DeveloperService {
         Developer developer = getDevById(id);
         if (developer != null) {
             developer.setSkills(skills);
-            DAO.updateObject(developer);
-            return developer;
+            return this.developerRepository.update(developer);
         }
         return null;
     }
 
     public boolean deleteDevById(Long id) {
-        try {
-            DAO.deleteObjectById(id, Developer.class);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        return this.developerRepository.delete(id);
     }
 }

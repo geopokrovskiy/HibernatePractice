@@ -1,47 +1,50 @@
 package com.geopokrovskiy.service;
 
-import com.geopokrovskiy.DAO.DAO;
-import com.geopokrovskiy.model.Developer;
 import com.geopokrovskiy.model.Skill;
+import com.geopokrovskiy.model.Status;
+import com.geopokrovskiy.repository.SkillRepository;
+import com.geopokrovskiy.repository.hibernate.SkillRepositoryImpl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SkillService {
 
+    private SkillRepository skillRepository;
+
+    public SkillService() {
+        this.skillRepository = new SkillRepositoryImpl();
+    }
+
+    public SkillService(SkillRepository skillRepository) {
+        this.skillRepository = skillRepository;
+    }
+
     public Skill addNewSkill(Skill skill) {
-        DAO.addObject(skill);
-        return skill;
+        return this.skillRepository.addNew(skill);
     }
 
     public Skill getSkillById(Long id) {
-        Skill skill = (Skill) DAO.getObjectById(id, Skill.class);
-        DAO.closeOpenedSession();
-        return skill;
+        return this.skillRepository.getById(id);
     }
 
     public List<Skill> getAllSkills() {
-        List<Skill> skills = (List<Skill>) DAO.getAllObjects(Skill.class);
-        DAO.closeOpenedSession();
-        return skills;
+        return this.skillRepository.getAll().stream().
+                filter(s -> s.getStatus().equals(Status.ACTIVE)).
+                collect(Collectors.toList());
     }
 
     public Skill updateSkillName(Long id, String name) {
         Skill skill = getSkillById(id);
         if (skill != null) {
             skill.setName(name);
-            DAO.updateObject(skill);
-            return skill;
+            return this.skillRepository.update(skill);
         }
         return null;
     }
 
     public boolean deleteSkillById(Long id) {
-        try {
-            DAO.deleteObjectById(id, Skill.class);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        return this.skillRepository.delete(id);
     }
 
 }

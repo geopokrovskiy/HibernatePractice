@@ -1,44 +1,50 @@
 package com.geopokrovskiy.service;
 
-import com.geopokrovskiy.DAO.DAO;
 import com.geopokrovskiy.model.Speciality;
+import com.geopokrovskiy.model.Status;
+import com.geopokrovskiy.repository.SpecialityRepository;
+import com.geopokrovskiy.repository.hibernate.SpecialityRepositoryImpl;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SpecialityService {
 
+    private SpecialityRepository specialityRepository;
+
+    public SpecialityService() {
+        this.specialityRepository = new SpecialityRepositoryImpl();
+    }
+
+    public SpecialityService(SpecialityRepository specialityRepository) {
+        this.specialityRepository = specialityRepository;
+    }
+
     public Speciality addNewSpec(Speciality speciality) {
-        DAO.addObject(speciality);
-        return speciality;
+        return this.specialityRepository.addNew(speciality);
     }
 
     public Speciality getSpecById(Long id) {
-        Speciality speciality = (Speciality) DAO.getObjectById(id, Speciality.class);
-        DAO.closeOpenedSession();
-        return speciality;
+        return this.specialityRepository.getById(id);
     }
 
     public List<Speciality> getAllSpecs() {
-        List<Speciality> specialities = (List<Speciality>) DAO.getAllObjects(Speciality.class);
-        DAO.closeOpenedSession();
-        return specialities;
+        return this.specialityRepository.getAll()
+                .stream().
+                filter(s -> s.getStatus().equals(Status.ACTIVE))
+                .collect(Collectors.toList());
     }
 
     public Speciality updateSpecName(Long id, String name) {
         Speciality speciality = getSpecById(id);
         if (speciality != null) {
             speciality.setName(name);
-            DAO.updateObject(speciality);
-            return speciality;
+            return this.specialityRepository.update(speciality);
         }
         return null;
     }
 
     public boolean deleteSpecById(Long id) {
-        try {
-            DAO.deleteObjectById(id, Speciality.class);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        return this.specialityRepository.delete(id);
     }
 }

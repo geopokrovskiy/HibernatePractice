@@ -1,6 +1,5 @@
 package com.geopokrovskiy.view;
 
-import com.geopokrovskiy.DAO.DAO;
 import com.geopokrovskiy.model.Developer;
 import com.geopokrovskiy.model.Skill;
 import com.geopokrovskiy.model.Speciality;
@@ -22,7 +21,6 @@ public class DeveloperView {
         Scanner scanner = new Scanner(System.in);
         List<Developer> developerList = developerService.getAllDevs();
         System.out.println("List of developers: " + developerList);
-        DAO.closeOpenedSession();
         while (true) {
             System.out.println("You are in developer menu. What would you like to do?");
             System.out.println("1) Add new developer");
