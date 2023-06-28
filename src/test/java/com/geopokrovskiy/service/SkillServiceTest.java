@@ -1,11 +1,9 @@
 package com.geopokrovskiy.service;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.geopokrovskiy.model.Skill;
 import com.geopokrovskiy.model.Status;
 import com.geopokrovskiy.repository.SkillRepository;
 import com.geopokrovskiy.repository.hibernate.SkillRepositoryImpl;
-import com.geopokrovskiy.service.SkillService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;
